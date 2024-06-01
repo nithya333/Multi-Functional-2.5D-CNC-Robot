@@ -394,8 +394,6 @@ class Controller:
             # print(f"name of path : {gcode_file} :")
             # gcode_compiler.compile_to_file(gcode_file)
             
-            # Run the other gcode sender script
-            # subprocess.run(["python", "C:\scripts\other.py"])
             arduino_port = combobox2.currentText()
             # arduino_port = 'COM3'
             arduino_baudrate = '115200'
