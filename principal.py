@@ -43,6 +43,8 @@ import io
 import keyboard
 
 
+import glob
+import serial
 ## CONTROLLING CLASS
 ########################################################################
 
@@ -315,7 +317,34 @@ class Controller:
         #     # start the app
         #     retval = msg.exec_()
     
+    def serial_ports(self):
+        """ Lists serial port names
 
+            :raises EnvironmentError:
+                On unsupported or unknown platforms
+            :returns:
+                A list of the serial ports available on the system
+        """
+        if sys.platform.startswith('win'):
+            ports = ['COM%s' % (i + 1) for i in range(256)]
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            ports = glob.glob('/dev/tty[A-Za-z]*')
+        elif sys.platform.startswith('darwin'):
+            ports = glob.glob('/dev/tty.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+
+        result = []
+        for port in ports:
+            try:
+                s = serial.Serial(port)
+                s.close()
+                result.append(port)
+            except (OSError, serial.SerialException):
+                pass
+        return result
+    
     def startprinting(self):
         try:
             # print("\n\nEntered\n\n")
@@ -338,34 +367,59 @@ class Controller:
             # gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
             gcode_file = QFileDialog.getOpenFileName(filter="gcode(*.gcode)")[0]
 
+            available_com_port = self.serial_ports()
+
+            dlg = QDialog()
+            dlg.setWindowTitle("Print!")
+            QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            dlg.buttonBox = QDialogButtonBox(QBtn)
+            dlg.buttonBox.accepted.connect(dlg.accept)
+            dlg.buttonBox.rejected.connect(dlg.reject)
+            combobox2 = QComboBox()
+            combobox2.addItems(available_com_port)
+
+            dlg.layout = QVBoxLayout()
+            message = QLabel("Choose the COM Port of Arduino")
+            dlg.layout.addWidget(message)
+            dlg.layout.addWidget(combobox2)
+            dlg.layout.addWidget(dlg.buttonBox)
+            dlg.setLayout(dlg.layout)
+            button = dlg.exec()
+            # if button:
+            #     print("Yes!")
+            # else:
+            #     print("No!")
+            # print(combobox2.currentText())
+
             # print(f"name of path : {gcode_file} :")
             # gcode_compiler.compile_to_file(gcode_file)
             
             # Run the other gcode sender script
             # subprocess.run(["python", "C:\scripts\other.py"])
-            arduino_port = 'COM3'
+            arduino_port = combobox2.currentText()
+            # arduino_port = 'COM3'
             arduino_baudrate = '115200'
-            print(f"\n\ngcode_file {gcode_file}, arduino_baudrate {arduino_baudrate}, arduino_port {arduino_port}\n\n")
-            # self.gcode_sender_func(gcode_file, arduino_baudrate, arduino_port)
-            # self.gcode_sender_func('st.gcode')
-            status = subprocess.call(['python', 'pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
-            if (status == 0):
-                print("successfully printed")
-            else:
-                print("not printed")
+            printed = False
+            if arduino_port and button:
+                print(f"\n\ngcode_file {gcode_file}, arduino_baudrate {arduino_baudrate}, arduino_port {arduino_port}\n\n")
+                # self.gcode_sender_func(gcode_file, arduino_baudrate, arduino_port)
+                # self.gcode_sender_func('st.gcode')
+                status = subprocess.call(['python', 'pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
 
-            # loop = asyncio.get_event_loop()
-            # loop.run_until_complete(self.gcode_sender_func('st.gcode'))
-            # await self.gcode_sender_func('st.gcode')
-            # asyncio.run(self.gcode_sender_func('st.gcode'))
+                if (status == 0):
+                    print("successfully printed")
+                    printed = True
+                else:
+                    print("not printed")
 
-            # loop = self.gcode_sender_func('st.gcode')
-            # await loop
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
           
             # setting message for Message Box
-            msg.setText("G-code successfully created!")
+            if printed:
+                msg.setText("G-code successfully printed!")
+            else:
+                msg.setText("Print Unsuccessful, Try again")
               
             # setting Message box window title
             msg.setWindowTitle("Success!")

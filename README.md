@@ -18,7 +18,8 @@ pip install tqdm
 pip install pillow
 pip install svg-to-gcode
 pip install TextToGcode
-
+pip install SpeechRecognition
+pip install pyaudio
 
 pip install click loguru simplification svgpathtools svgwrite svg.path
 
