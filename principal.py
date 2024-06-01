@@ -5,7 +5,7 @@ Created on Mon Aug 29 00:43:43 2022
 @author: CAD01
 """
 
-import interface
+import interface 
 import os
 # import pathlib
 from ui_functions import *
@@ -42,9 +42,10 @@ from svg_to_gcode.formulas import linear_map
 import io
 import keyboard
 
+from vosk import Model, KaldiRecognizer
+import pyaudio
 
-import glob
-import serial
+
 ## CONTROLLING CLASS
 ########################################################################
 
@@ -317,34 +318,7 @@ class Controller:
         #     # start the app
         #     retval = msg.exec_()
     
-    def serial_ports(self):
-        """ Lists serial port names
 
-            :raises EnvironmentError:
-                On unsupported or unknown platforms
-            :returns:
-                A list of the serial ports available on the system
-        """
-        if sys.platform.startswith('win'):
-            ports = ['COM%s' % (i + 1) for i in range(256)]
-        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-            # this excludes your current terminal "/dev/tty"
-            ports = glob.glob('/dev/tty[A-Za-z]*')
-        elif sys.platform.startswith('darwin'):
-            ports = glob.glob('/dev/tty.*')
-        else:
-            raise EnvironmentError('Unsupported platform')
-
-        result = []
-        for port in ports:
-            try:
-                s = serial.Serial(port)
-                s.close()
-                result.append(port)
-            except (OSError, serial.SerialException):
-                pass
-        return result
-    
     def startprinting(self):
         try:
             # print("\n\nEntered\n\n")
@@ -367,59 +341,34 @@ class Controller:
             # gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
             gcode_file = QFileDialog.getOpenFileName(filter="gcode(*.gcode)")[0]
 
-            available_com_port = self.serial_ports()
-
-            dlg = QDialog()
-            dlg.setWindowTitle("Print!")
-            QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-            dlg.buttonBox = QDialogButtonBox(QBtn)
-            dlg.buttonBox.accepted.connect(dlg.accept)
-            dlg.buttonBox.rejected.connect(dlg.reject)
-            combobox2 = QComboBox()
-            combobox2.addItems(available_com_port)
-
-            dlg.layout = QVBoxLayout()
-            message = QLabel("Choose the COM Port of Arduino")
-            dlg.layout.addWidget(message)
-            dlg.layout.addWidget(combobox2)
-            dlg.layout.addWidget(dlg.buttonBox)
-            dlg.setLayout(dlg.layout)
-            button = dlg.exec()
-            # if button:
-            #     print("Yes!")
-            # else:
-            #     print("No!")
-            # print(combobox2.currentText())
-
             # print(f"name of path : {gcode_file} :")
             # gcode_compiler.compile_to_file(gcode_file)
             
             # Run the other gcode sender script
             # subprocess.run(["python", "C:\scripts\other.py"])
-            arduino_port = combobox2.currentText()
-            # arduino_port = 'COM3'
+            arduino_port = 'COM3'
             arduino_baudrate = '115200'
-            printed = False
-            if arduino_port and button:
-                print(f"\n\ngcode_file {gcode_file}, arduino_baudrate {arduino_baudrate}, arduino_port {arduino_port}\n\n")
-                # self.gcode_sender_func(gcode_file, arduino_baudrate, arduino_port)
-                # self.gcode_sender_func('st.gcode')
-                status = subprocess.call(['python', 'pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
+            print(f"\n\ngcode_file {gcode_file}, arduino_baudrate {arduino_baudrate}, arduino_port {arduino_port}\n\n")
+            # self.gcode_sender_func(gcode_file, arduino_baudrate, arduino_port)
+            # self.gcode_sender_func('st.gcode')
+            status = subprocess.call(['python', 'pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
+            if (status == 0):
+                print("successfully printed")
+            else:
+                print("not printed")
 
-                if (status == 0):
-                    print("successfully printed")
-                    printed = True
-                else:
-                    print("not printed")
+            # loop = asyncio.get_event_loop()
+            # loop.run_until_complete(self.gcode_sender_func('st.gcode'))
+            # await self.gcode_sender_func('st.gcode')
+            # asyncio.run(self.gcode_sender_func('st.gcode'))
 
+            # loop = self.gcode_sender_func('st.gcode')
+            # await loop
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
           
             # setting message for Message Box
-            if printed:
-                msg.setText("G-code successfully printed!")
-            else:
-                msg.setText("Print Unsuccessful, Try again")
+            msg.setText("G-code successfully created!")
               
             # setting Message box window title
             msg.setWindowTitle("Success!")
@@ -489,21 +438,15 @@ class Controller:
         self.setPhoto(im)
             
     def speech2text(self):
-        r= sr.Recognizer()
-        try:
-            # print(sr.Microphone.list_microphone_names())
-            with sr.Microphone() as source:
-              r.adjust_for_ambient_noise(source, duration = 1)
-              print("Say something")
-              audio= r.listen(source)
-              # text= r.recognize_google(audio,language="en-IN", show_all = False)
-              text= r.recognize(audio, show_all = False)
-              print(text)
-            # self.text2png(text)
-            self.text2gcode_singlestroke(text)
-     
-        except Exception as e:
-           print(e)
+        with open("temp_output.txt", "w") as f:
+            f.write("")  #Clears the file for fresh entry
+        speech_to_text=subprocess.Popen(["python","speech.py"],shell = True)
+        speech_to_text.wait()
+        with open("temp_output.txt", 'r') as f:
+            speech = f.readlines()
+            # return [line.strip() for line in speech]
+            for line in speech:
+                print(line)
 
     def textgcode_preview(self):
         user_text = self.interface_ui.lineEdit_2.toPlainText()

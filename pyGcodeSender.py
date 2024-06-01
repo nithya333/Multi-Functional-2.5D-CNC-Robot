@@ -19,15 +19,15 @@ def gcode_sender_func(filename, baudrate, port):
     print(f"\tPort name: {port}")
     print(f"\tBaud rate: {baudrate}")
     print()
-    # while(1):
-    #     command = input("Would you like to continue with these settings?[y/n]")
-    #     if command.strip().lower() == 'y':
-    #         break
-    #     elif command.strip().lower() =='n':
-    #         sys.exit()
-    #     else:
-    #         print("Oooops! Please input yes or no.")
-    #         continue
+    while(1):
+        command = input("Would you like to continue with these settings?[y/n]")
+        if command.strip().lower() == 'y':
+            break
+        elif command.strip().lower() =='n':
+            sys.exit()
+        else:
+            print("Oooops! Please input yes or no.")
+            continue
 
     # Loading codes in file
     try:
@@ -119,9 +119,8 @@ def gcode_sender_func(filename, baudrate, port):
 
     # End of the program.
     print()
-    print("Welcome to use this script again. Best wishes.")
+    print("Welcome to use this simple script again. Best wishes.")
     print('='*130)
-    return 1
 
 if __name__ =="__main__":
     parser = argparse.ArgumentParser(
