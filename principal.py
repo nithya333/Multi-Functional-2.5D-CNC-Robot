@@ -490,21 +490,31 @@ class Controller:
         self.setPhoto(im)
             
     def speech2text(self):
-        r= sr.Recognizer()
-        try:
-            # print(sr.Microphone.list_microphone_names())
-            with sr.Microphone() as source:
-              r.adjust_for_ambient_noise(source, duration = 1)
-              print("Say something")
-              audio= r.listen(source)
-              # text= r.recognize_google(audio,language="en-IN", show_all = False)
-              text= r.recognize(audio, show_all = False)
-              print(text)
-            # self.text2png(text)
-            self.text2gcode_singlestroke(text)
+        # r= sr.Recognizer()
+        # try:
+        #     # print(sr.Microphone.list_microphone_names())
+        #     with sr.Microphone() as source:
+        #       r.adjust_for_ambient_noise(source, duration = 1)
+        #       print("Say something")
+        #       audio= r.listen(source)
+        #       # text= r.recognize_google(audio,language="en-IN", show_all = False)
+        #       text= r.recognize(audio, show_all = False)
+        #       print(text)
+        #     # self.text2png(text)
+        #     self.text2gcode_singlestroke(text)
      
-        except Exception as e:
-           print(e)
+        # except Exception as e:
+        #    print(e)
+           
+        with open("temp_output.txt", "w") as f:
+            f.write("")  #Clears the file for fresh entry
+        speech_to_text=subprocess.Popen(["python","speech.py"],shell = True)
+        speech_to_text.wait()
+        with open("temp_output.txt", 'r') as f:
+            speech = f.readlines()
+            # return [line.strip() for line in speech]
+            for line in speech:
+                print(line)
 
     def textgcode_preview(self):
         user_text = self.interface_ui.lineEdit_2.toPlainText()
