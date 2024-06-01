@@ -42,6 +42,9 @@ from svg_to_gcode.formulas import linear_map
 import io
 import keyboard
 
+from vosk import Model, KaldiRecognizer
+import pyaudio
+
 
 import glob
 import serial

@@ -9,5 +9,4 @@ pillow
 svg-to-gcode
 TextToGcode
 keyboard
-SpeechRecognition
-pyaudio
+vosk
