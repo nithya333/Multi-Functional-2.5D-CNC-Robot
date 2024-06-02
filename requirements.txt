@@ -6,7 +6,7 @@ numpy
 pyserial
 tqdm
 pillow
-svg-to-gcode
 TextToGcode
 keyboard
 vosk
+pyaudio

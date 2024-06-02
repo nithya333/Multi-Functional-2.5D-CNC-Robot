@@ -823,6 +823,51 @@ class Ui_MainWindow(object):
         self.label_18.setObjectName("label_18")
         self.verticalLayout_9.addWidget(self.label_18)
         
+        # Voice input
+        self.frame_38 = QtWidgets.QFrame(self.frame_7)
+        self.frame_38.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_38.setMinimumSize(QtCore.QSize(230, 65))
+        self.frame_38.setMaximumSize(QtCore.QSize(230, 65))
+        self.frame_38.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_38.setObjectName("frame_38")  
+        self.horizontalLayout_36 = QtWidgets.QHBoxLayout(self.frame_38)
+        self.horizontalLayout_36.setObjectName("horizontalLayout_36")
+
+        self.label_35 = QtWidgets.QLabel(self.frame_38)
+        self.label_35.setMinimumSize(QtCore.QSize(140, 20))
+        self.label_35.setMaximumSize(QtCore.QSize(16777215, 20))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_35.setFont(font)
+        self.label_35.setStyleSheet("border:none;")
+        self.label_35.setObjectName("label_35")
+        self.horizontalLayout_36.addWidget(self.label_35)
+
+        self.speak_btn_img = QtWidgets.QPushButton(self.frame_38)
+        self.speak_btn_img.setMinimumSize(QtCore.QSize(60, 25))
+        self.speak_btn_img.setStyleSheet("\n"
+"QPushButton{\n"
+"    background-color: rgb(76, 95, 107);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: rgb(96, 121, 136);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.speak_btn_img.setObjectName("speak_btn_img")
+        self.horizontalLayout_36.addWidget(self.speak_btn_img)
+        self.verticalLayout_9.addWidget(self.frame_38)
+
         # Beginning of height box
         self.frame_24 = QtWidgets.QFrame(self.frame_7)
         self.frame_24.setMinimumSize(QtCore.QSize(230, 55))
@@ -2022,6 +2067,8 @@ class Ui_MainWindow(object):
         self.invert_btn.setText(_translate("MainWindow", "Invert"))
         self.sharpness_btn.setText(_translate("MainWindow", "Sharpness"))
         self.label_18.setText(_translate("MainWindow", "Image Dimensions"))
+        self.label_35.setText(_translate("MainWindow", "Voice Input"))
+        self.speak_btn_img.setText(_translate("MainWindow", "Speak"))
         self.label_5.setText(_translate("MainWindow", "Height  "))
         self.label_21.setText(_translate("MainWindow", "mm"))
         self.label.setText(_translate("MainWindow", "Width"))

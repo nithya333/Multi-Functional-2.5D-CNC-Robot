@@ -70,6 +70,7 @@ class Controller:
         self.interface_ui.sharpness_btn.clicked.connect(self.sharp)
         self.interface_ui.invert_btn.clicked.connect(self.inverter)
         self.interface_ui.resize_btn.clicked.connect(lambda: self.resizeImage(self.image, self.height_px, self.width_px))
+        self.interface_ui.speak_btn_img.clicked.connect(self.speech2img)
         self.interface_ui.verticalSlider.valueChanged['int'].connect(self.brightness_value)
 
         # output file buttons
@@ -517,7 +518,44 @@ class Controller:
                 print(line)
         # os.remove("temp_output.txt")
         
+    def speech2img(self):
+        with open("temp_output.txt", "w") as f:
+            f.write("")  #Clears the file for fresh entry
+        speech_to_text=subprocess.Popen(["python","speech.py"],shell = True)
+        speech_to_text.wait()
 
+        c_w_d = os.path.join(os.getcwd(),"Images")
+        dir_list = os.listdir(c_w_d)
+        # file_names_without_ext = [".".join(f.split(".")[:-1]) for f in dir_list]
+        file_names_without_ext = {".".join(f.split(".")[:-1]) : ".".join(f.split(".")[1:]) for f in dir_list}
+        # print(file_names_without_ext)
+        with open("temp_output.txt", 'r') as f:
+            speech = f.read()
+            # return [line.strip() for line in speech]
+        for line in speech.split('\n'):
+            if line in file_names_without_ext.keys():
+                print(file_names_without_ext[line])
+                self.filename = f"{line}.{file_names_without_ext[line]}"
+                self.image = cv2.imread(os.path.join(c_w_d, self.filename))
+                self.interface_ui.verticalSlider.setValue(0)
+                self.setPhoto(self.image)
+                break
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+          
+            # setting message for Message Box
+            msg.setText("Sorry no matching image found!")
+              
+            # setting Message box window title
+            msg.setWindowTitle("Warning!")
+              
+            # declaring buttons on Message Box
+            msg.setStandardButtons(QMessageBox.Ok)
+              
+            # start the app
+            retval = msg.exec_()
+    
     def textgcode_preview(self):
         if self.interface_ui.radioButton_voice.isChecked(): # Boolean whether checked or not
             with open("temp_output.txt", 'r') as f:
