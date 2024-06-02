@@ -1549,6 +1549,7 @@ class Ui_MainWindow(object):
         # adding signal and slot 
         # self.radioButton_voice.toggled.connect()
         # self.verticalLayout_13.addWidget(self.radioButton_voice)
+        self.radioButton_voice.setObjectName("radioButton_voice")
         self.verticalLayout_13.addWidget(self.radioButton_voice)
         
 
@@ -1566,7 +1567,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.addWidget(self.label_28)
 
         self.speak_btn = QtWidgets.QPushButton(self.frame_28)
-        self.speak_btn.setMinimumSize(QtCore.QSize(60, 25))
+        self.speak_btn.setMinimumSize(QtCore.QSize(80, 25))
         self.speak_btn.setStyleSheet("\n"
 "QPushButton{\n"
 "    background-color: rgb(76, 95, 107);\n"
@@ -1608,6 +1609,7 @@ class Ui_MainWindow(object):
         self.radioButton_text.setChecked(True)
         # adding signal and slot
         # self.radioButton_text.toggled.connect()
+        self.radioButton_text.setObjectName("radioButton_text")
         self.verticalLayout_13.addWidget(self.radioButton_text)
 
         self.label_31 = QtWidgets.QLabel(self.frame_33)
@@ -1625,7 +1627,7 @@ class Ui_MainWindow(object):
         self.lineEdit_2.setMinimumSize(QtCore.QSize(190, 75))
         self.lineEdit_2.setMaximumSize(QtCore.QSize(190, 95))
         # self.lineEdit_2.setMinimumSize(120, 70)
-        self.lineEdit_2.setPlaceholderText("Text Input")
+        self.lineEdit_2.setPlaceholderText("Type Here")
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(10)
@@ -2089,8 +2091,10 @@ class Ui_MainWindow(object):
         # self.lineEdit_2.setText(_translate("MainWindow", "M107"))
         # self.label_27.setText(_translate("MainWindow", "Vel. of laser"))
         # self.label_16.setText(_translate("MainWindow", "mm/s"))
-        self.label_28.setText(_translate("MainWindow", "Voice Input"))
+        self.label_28.setText(_translate("MainWindow", "Click here : "))
         self.speak_btn.setText(_translate("MainWindow", "Speak"))
+        self.radioButton_voice.setText(_translate("MainWindow", "Voice Input"))
+        self.radioButton_text.setText(_translate("MainWindow", "Text Input"))
         # self.label_30.setText(_translate("MainWindow", "Text"))
         self.label_31.setText(_translate("MainWindow", ":"))
         self.label_34.setText(_translate("MainWindow", "Font "))

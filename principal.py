@@ -424,7 +424,7 @@ class Controller:
                 msg.setText("Print Unsuccessful, Try again")
               
             # setting Message box window title
-            msg.setWindowTitle("Success!")
+            msg.setWindowTitle("Print status!")
               
             # declaring buttons on Message Box
             msg.setStandardButtons(QMessageBox.Ok)
