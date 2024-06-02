@@ -1484,6 +1484,7 @@ class Ui_MainWindow(object):
 #         self.horizontalLayout.addWidget(self.label_16)
 #         self.verticalLayout_13.addWidget(self.frame_23)
         
+    
         # Beginning of text input heading
         self.frame_28 = QtWidgets.QFrame(self.tab_2)
         self.frame_28.setStyleSheet("\n"
@@ -1493,15 +1494,25 @@ class Ui_MainWindow(object):
         self.frame_28.setMinimumSize(QtCore.QSize(230, 65))
         self.frame_28.setMaximumSize(QtCore.QSize(230, 65))
         self.frame_28.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_28.setObjectName("frame_28")
+        self.frame_28.setObjectName("frame_28")  
         self.horizontalLayout_21 = QtWidgets.QHBoxLayout(self.frame_28)
         self.horizontalLayout_21.setObjectName("horizontalLayout_21")
+
+        # Radio button for voice
+        self.radioButton_voice = QtWidgets.QRadioButton(self.frame_28)
+        self.radioButton_voice.setGeometry(QtCore.QRect(180, 120, 95, 20))
+        # adding signal and slot 
+        # self.radioButton_voice.toggled.connect()
+        # self.verticalLayout_13.addWidget(self.radioButton_voice)
+        self.verticalLayout_13.addWidget(self.radioButton_voice)
+        
+
         self.label_28 = QtWidgets.QLabel(self.frame_28)
         self.label_28.setMinimumSize(QtCore.QSize(140, 20))
         self.label_28.setMaximumSize(QtCore.QSize(16777215, 20))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
-        font.setPointSize(11)
+        font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
         self.label_28.setFont(font)
@@ -1510,7 +1521,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.addWidget(self.label_28)
 
         self.speak_btn = QtWidgets.QPushButton(self.frame_28)
-        self.speak_btn.setMinimumSize(QtCore.QSize(40, 25))
+        self.speak_btn.setMinimumSize(QtCore.QSize(60, 25))
         self.speak_btn.setStyleSheet("\n"
 "QPushButton{\n"
 "    background-color: rgb(76, 95, 107);\n"
@@ -1529,7 +1540,6 @@ class Ui_MainWindow(object):
 "}")
         self.speak_btn.setObjectName("speak_btn")
         self.horizontalLayout_21.addWidget(self.speak_btn)
-
         self.verticalLayout_13.addWidget(self.frame_28)
         # End of text input heading
 
@@ -1546,6 +1556,15 @@ class Ui_MainWindow(object):
         self.frame_33.setObjectName("frame_33")
         self.horizontalLayout_17 = QtWidgets.QHBoxLayout(self.frame_33)
         self.horizontalLayout_17.setObjectName("horizontalLayout_17")
+
+        # Radio button for text
+        self.radioButton_text = QtWidgets.QRadioButton(self.frame_28)
+        self.radioButton_text.setGeometry(QtCore.QRect(180, 150, 95, 20))
+        self.radioButton_text.setChecked(True)
+        # adding signal and slot
+        # self.radioButton_text.toggled.connect()
+        self.verticalLayout_13.addWidget(self.radioButton_text)
+
         self.label_31 = QtWidgets.QLabel(self.frame_33)
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
@@ -1561,7 +1580,7 @@ class Ui_MainWindow(object):
         self.lineEdit_2.setMinimumSize(QtCore.QSize(190, 75))
         self.lineEdit_2.setMaximumSize(QtCore.QSize(190, 95))
         # self.lineEdit_2.setMinimumSize(120, 70)
-        self.lineEdit_2.setPlaceholderText("Type here")
+        self.lineEdit_2.setPlaceholderText("Text Input")
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(10)
@@ -2023,7 +2042,7 @@ class Ui_MainWindow(object):
         # self.lineEdit_2.setText(_translate("MainWindow", "M107"))
         # self.label_27.setText(_translate("MainWindow", "Vel. of laser"))
         # self.label_16.setText(_translate("MainWindow", "mm/s"))
-        self.label_28.setText(_translate("MainWindow", "Text Input"))
+        self.label_28.setText(_translate("MainWindow", "Voice Input"))
         self.speak_btn.setText(_translate("MainWindow", "Speak"))
         # self.label_30.setText(_translate("MainWindow", "Text"))
         self.label_31.setText(_translate("MainWindow", ":"))

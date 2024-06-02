@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
     def update_text(self, text):
         self.label.setText(f"Recorded Text: {text}")
         with open('temp_output.txt', 'a') as f:
-            f.write(f"{text}\n")
+            f.write(f"{text.strip()}\n")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

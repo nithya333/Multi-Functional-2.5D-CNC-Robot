@@ -515,9 +515,18 @@ class Controller:
             # return [line.strip() for line in speech]
             for line in speech:
                 print(line)
+        # os.remove("temp_output.txt")
+        
 
     def textgcode_preview(self):
-        user_text = self.interface_ui.lineEdit_2.toPlainText()
+        if self.interface_ui.radioButton_voice.isChecked(): # Boolean whether checked or not
+            with open("temp_output.txt", 'r') as f:
+                user_text = f.read()
+                
+        elif self.interface_ui.radioButton_text.isChecked():
+            user_text = self.interface_ui.lineEdit_2.toPlainText()
+        print(user_text)
+        
         gcode_out = self.text2gcode_singlestroke(user_text)
         self.save_gcodefile("preview.gcode", gcode_out)
         self.gcode2img("preview.gcode")
@@ -574,6 +583,18 @@ class Controller:
         moviment_speed = self.interface_ui.vel_displacement.value()
         print(text_input, font_selected, font_size_spin,line_space_spin, angle, char_space, word_space)
         gcode_out = ""
+
+        text_parse = text_input.split("\n")
+        for i,line in enumerate(text_parse):
+            if len(line) * font_size_spin > 290: # If the line exceeds the width of A4 split and put it in next line
+                split_char = 290//font_size_spin
+                split = line[0:split_char].rfind(" ")
+                str1 = line[0:split]
+                str2 = line[split:]
+                text_parse.pop(i)
+                text_parse.insert(i, str2)
+                text_parse.insert(i, str1)
+        text_input = "\n".join(text_parse)
         gcode_out = text2gcode_helper.convert(text_input, fontfile=font_selected, YLineOffset=line_space_spin, XScale=font_size_spin*0.1, YScale=font_size_spin*0.1, CSpaceP=char_space, WSpaceP=word_space, Angle=angle, Feed=moviment_speed)
         return gcode_out
 
