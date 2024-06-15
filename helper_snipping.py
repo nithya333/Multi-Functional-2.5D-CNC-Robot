@@ -64,7 +64,7 @@ class Capture(QWidget):
             clipboard = QApplication.clipboard()
             clipboard.setPixmap(self.imgmap)
 
-            self.imgmap.save("ScreenCapture.png")
+            self.imgmap.save("temp_screencapt_img.png")
 
             self.main.label.setPixmap(self.imgmap)
             self.main.show()

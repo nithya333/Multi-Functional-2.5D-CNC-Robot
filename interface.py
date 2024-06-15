@@ -239,26 +239,124 @@ class Ui_MainWindow(object):
         self.frame_20.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_20.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_20.setObjectName("frame_20")
-        self.gridLayout_4 = QtWidgets.QGridLayout(self.frame_20)
-        self.gridLayout_4.setObjectName("gridLayout_4")
+        # self.gridLayout_4 = QtWidgets.QGridLayout(self.frame_20)
+        # self.gridLayout_4.setObjectName("gridLayout_4")
         self.horizontalLayout_10.addWidget(self.frame_20)
 
         self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.frame_20)
         self.verticalLayout_14.setObjectName("verticalLayout_14")
         self.label_25 = QtWidgets.QLabel(self.frame_20)
         self.label_25.setMinimumSize(QtCore.QSize(16777215, 16777215))
-        self.label_25.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        # self.label_25.setMaximumHeight(100)
         # self.label_25.setMaximumSize(QtCore.QSize(16777915, 20))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
-        font.setPointSize(11)
+        font.setPointSize(9)
         font.setBold(False)
         font.setWeight(50)
         self.label_25.setFont(font)
         self.label_25.setStyleSheet("border:none;")
         self.label_25.setObjectName("label_25")
         # self.verticalLayout_14.addWidget(self.label_25)
-        self.verticalLayout_14.addWidget(self.frame_20)
+
+        self.frame_39 = QtWidgets.QFrame(self.frame_20)
+        self.frame_39.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_39.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_39.setMaximumHeight(50)
+        self.frame_39.setObjectName("frame_39")
+
+        self.horizontalLayout_37 = QtWidgets.QHBoxLayout(self.frame_39)
+        self.horizontalLayout_37.setObjectName("horizontalLayout_37")
+        self.pen_up = QtWidgets.QPushButton(self.frame_39)
+        self.pen_up.setMinimumSize(QtCore.QSize(100, 30))
+        self.pen_up.setMaximumSize(QtCore.QSize(100, 30))
+        self.pen_up.setStyleSheet("\n"
+"QPushButton{\n"
+"    background-color: rgb(76, 95, 107);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: rgb(96, 121, 136);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.pen_up.setObjectName("pen_up")
+        self.horizontalLayout_37.addWidget(self.pen_up)
+
+        self.pen_down = QtWidgets.QPushButton(self.frame_39)
+        self.pen_down.setMinimumSize(QtCore.QSize(100, 30))
+        self.pen_down.setMaximumSize(QtCore.QSize(100, 30))
+        self.pen_down.setStyleSheet("\n"
+"QPushButton{\n"
+"    background-color: rgb(76, 95, 107);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: rgb(96, 121, 136);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.pen_down.setObjectName("pen_down")
+        self.horizontalLayout_37.addWidget(self.pen_down)
+
+        self.laser_on = QtWidgets.QPushButton(self.frame_39)
+        self.laser_on.setMinimumSize(QtCore.QSize(100, 30))
+        self.laser_on.setMaximumSize(QtCore.QSize(120, 30))
+        self.laser_on.setStyleSheet("\n"
+"QPushButton{\n"
+"    background-color: rgb(76, 95, 107);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: rgb(96, 121, 136);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.laser_on.setObjectName("laser_on")
+        self.horizontalLayout_37.addWidget(self.laser_on)
+
+        self.laser_off = QtWidgets.QPushButton(self.frame_39)
+        self.laser_off.setMinimumSize(QtCore.QSize(100, 30))
+        self.laser_off.setMaximumSize(QtCore.QSize(120, 30))
+        self.laser_off.setStyleSheet("\n"
+"QPushButton{\n"
+"    background-color: rgb(76, 95, 107);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: rgb(96, 121, 136);\n"
+"    border-bottom: 1px solid  rgb(46, 57, 64);\n"
+"    border-radius:5px;\n"
+"    color: rgb(250, 252, 252);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    background-color: rgb(85, 170, 255);\n"
+"}")
+        self.laser_off.setObjectName("laser_off")
+        self.horizontalLayout_37.addWidget(self.laser_off)
+        self.verticalLayout_14.addWidget(self.frame_39)
+
+        
 
 #         # Beginning of vel. displacement
 #         self.frame_30 = QtWidgets.QFrame(self.frame_20)
@@ -2061,7 +2159,11 @@ class Ui_MainWindow(object):
         self.btn_info.setText(_translate("MainWindow", "Help"))
         self.load_btn.setText(_translate("MainWindow", "Open image"))
         self.save_btn.setText(_translate("MainWindow", "Save image"))
-        self.label_25.setText(_translate("MainWindow", "KPN"))
+        self.label_25.setText(_translate("MainWindow", "Tool Controls"))
+        self.pen_up.setText(_translate("MainWindow", "Pen Up"))
+        self.pen_down.setText(_translate("MainWindow", "Pen Down"))
+        self.laser_on.setText(_translate("MainWindow", "Laser ON"))
+        self.laser_off.setText(_translate("MainWindow", "Laser OFF"))
         self.gcode_btn.setText(_translate("MainWindow", "Generate GCode"))
         self.visualise_btn.setText(_translate("MainWindow", "Visualise"))
         self.print_btn.setText(_translate("MainWindow", "Print"))

@@ -10,3 +10,4 @@ TextToGcode
 keyboard
 vosk
 pyaudio
+gcode2image

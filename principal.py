@@ -9,8 +9,8 @@ import interface
 import os
 # import pathlib
 from ui_functions import *
-from svgtogcode import *
-# from pyGcodeSender import *
+from helper_svgtogcode import *
+# from helper_pyGcodeSender import *
 from PyQt5.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTime, QMetaObject, QObject, QPoint, QRect, QSize, QTime, QUrl, Qt, QEvent)
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
@@ -26,9 +26,10 @@ from math import *
 
 import sys
 # import time
-import text2gcode_helper
-# import serial
+import helper_text2gcode
+import serial
 from serial.tools import list_ports
+import time
 from tqdm import tqdm
 
 # Import Image for basic functionalities like open, save, show
@@ -86,6 +87,13 @@ class Controller:
 
         # preference buttons options
         self.interface_ui.set_btn.clicked.connect(self.getSpeed)
+
+        # Tool control buttons
+        self.interface_ui.pen_up.clicked.connect(self.pen_up)
+        self.interface_ui.pen_down.clicked.connect(self.pen_down)
+        self.interface_ui.laser_on.clicked.connect(self.laser_on)
+        self.interface_ui.laser_off.clicked.connect(self.laser_off)
+
         
     ## MAIN SCREEN PAGES   
     def show_pagina1(self):
@@ -272,21 +280,21 @@ class Controller:
     ## SVG_TO_GCODE TO CREATE THE OPERATION CODE
     def image2gcode(self):
         # try:
-            cv2.imwrite('imagem.png',self.tmp)
+            cv2.imwrite('temp_imgtogcode_imagem.png',self.tmp)
             
             h = str(round(self.height_px*0.2645833333, 2))
             
-            os.system ("magick convert imagem.png imagem.pgm")
+            os.system ("magick convert temp_imgtogcode_imagem.png temp_imgtogcode_imagem.pgm")
             
-            cmd = print("potrace imagem.pgm -s -H "+h+"pt -o imagem.svg")
-            os.system("potrace imagem.pgm -s -H "+h+"pt -o imagem.svg")
+            cmd = print("potrace temp_imgtogcode_imagem.pgm -s -H "+h+"pt -o temp_imgtogcode_imagem.svg")
+            os.system("potrace temp_imgtogcode_imagem.pgm -s -H "+h+"pt -o temp_imgtogcode_imagem.svg")
             
             moviment_speed = self.interface_ui.vel_displacement.value()
             # cutting_speed = self.interface_ui.vel_laser.value()
             
             # gcode_compiler = Compiler(CustomInterface, moviment_speed, pass_depth=5)
             gcode_compiler = Compiler(CustomInterface, movement_speed = moviment_speed, cutting_speed = 50, pass_depth=5)
-            curves = parse_file('imagem.svg')
+            curves = parse_file('temp_imgtogcode_imagem.svg')
             gcode_compiler.append_curves(curves) 
             gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
             gcode_compiler.compile_to_file(gcode_file)
@@ -352,21 +360,21 @@ class Controller:
     def startprinting(self):
         try:
             # print("\n\nEntered\n\n")
-            # cv2.imwrite('imagem.png',self.tmp)
+            # cv2.imwrite('temp_imgtogcode_imagem.png',self.tmp)
             
             # h = str(round(self.height_px*0.2645833333, 2))
             
-            # os.system ("magick convert imagem.png imagem.pgm")
+            # os.system ("magick convert temp_imgtogcode_imagem.png temp_imgtogcode_imagem.pgm")
             
-            # cmd = print("potrace imagem.pgm -s -H "+h+"pt -o imagem.svg")
-            # os.system("potrace imagem.pgm -s -H "+h+"pt -o imagem.svg")
+            # cmd = print("potrace temp_imgtogcode_imagem.pgm -s -H "+h+"pt -o temp_imgtogcode_imagem.svg")
+            # os.system("potrace temp_imgtogcode_imagem.pgm -s -H "+h+"pt -o temp_imgtogcode_imagem.svg")
             
             # moviment_speed = self.interface_ui.vel_displacement.value()
             # # cutting_speed = self.interface_ui.vel_laser.value()
             
             # # gcode_compiler = Compiler(CustomInterface, moviment_speed, pass_depth=5)
             # gcode_compiler = Compiler(CustomInterface, movement_speed = moviment_speed, cutting_speed = 50, pass_depth=5)
-            # curves = parse_file('imagem.svg')
+            # curves = parse_file('temp_imgtogcode_imagem.svg')
             # gcode_compiler.append_curves(curves) 
             # gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
             gcode_file = QFileDialog.getOpenFileName(filter="gcode(*.gcode)")[0]
@@ -406,7 +414,7 @@ class Controller:
                 print(f"\n\ngcode_file {gcode_file}, arduino_baudrate {arduino_baudrate}, arduino_port {arduino_port}\n\n")
                 # self.gcode_sender_func(gcode_file, arduino_baudrate, arduino_port)
                 # self.gcode_sender_func('st.gcode')
-                status = subprocess.call(['python', 'pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
+                status = subprocess.call(['python', 'helper_pyGcodeSender.py', '-p', arduino_port, '-b', arduino_baudrate, gcode_file], shell=True)
 
                 if (status == 0):
                     print("successfully printed")
@@ -467,9 +475,9 @@ class Controller:
 
     def gcode2img(self, gcode_file):
         input_file = gcode_file ##-->addition
-        output_file = os.path.join(os.getcwd(),"output_file.gcode")
-        image = os.path.join(os.getcwd(),"G2I.png")
-        # image = "G2I.png"
+        output_file = os.path.join(os.getcwd(),"temp_gcodetoimg_input.gcode")
+        image = os.path.join(os.getcwd(),"temp_gcode2img_output.png")
+        # image = "temp_gcode2img_output.png"
         # self.replace_strings_in_file(input_file, output_file)  
 
         with open(input_file, 'r') as file:
@@ -484,10 +492,10 @@ class Controller:
 
         print(f"\n\nOutput file:\t{output_file}")
         print(f"\n\nImage:\t{image}")
-        # subprocess.Popen(f"gcode2image --resolution 0.1 --maxintensity 1 --showimage --flip output_file.gcode G2I.png")  
-        p = subprocess.Popen(f"gcode2image --resolution 0.1 --maxintensity 1 --flip output_file.gcode G2I.png") 
+        # subprocess.Popen(f"gcode2image --resolution 0.1 --maxintensity 1 --showimage --flip output_file.gcode temp_gcode2img_output.png")  
+        p = subprocess.Popen(f"gcode2image --resolution 0.1 --maxintensity 1 --flip temp_gcodetoimg_input.gcode temp_gcode2img_output.png") 
         p.wait()
-        im = cv2.imread("G2I.png")
+        im = cv2.imread("temp_gcode2img_output.png")
         self.setPhoto(im)
             
     def speech2text(self):
@@ -506,22 +514,28 @@ class Controller:
      
         # except Exception as e:
         #    print(e)
-           
-        with open("temp_output.txt", "w") as f:
+ 
+        speech_str = "" 
+        with open("temp_speechtotxt_output.txt", "w") as f:
             f.write("")  #Clears the file for fresh entry
-        speech_to_text=subprocess.Popen(["python","speech.py"],shell = True)
+        speech_to_text=subprocess.Popen(["python","helper_speech.py"],shell = True)
         speech_to_text.wait()
-        with open("temp_output.txt", 'r') as f:
-            speech = f.readlines()
+        with open("temp_speechtotxt_output.txt", 'r') as f:
+            speech_str = f.read()
+            # speech = f.readlines()
             # return [line.strip() for line in speech]
-            for line in speech:
-                print(line)
-        # os.remove("temp_output.txt")
+            # for line in speech:
+            #     print(line)
+        print(speech_str)
+        self.interface_ui.lineEdit_2.setHtml(speech_str)
+        # cursor = self.interface_ui.lineEdit_2.textCursor()
+        # cursor.insertText(speech_str)
+        # os.remove("temp_speechtotxt_output.txt")
         
     def speech2img(self):
-        with open("temp_output.txt", "w") as f:
+        with open("temp_speechtotxt_output.txt", "w") as f:
             f.write("")  #Clears the file for fresh entry
-        speech_to_text=subprocess.Popen(["python","speech.py"],shell = True)
+        speech_to_text=subprocess.Popen(["python","helper_speech.py"],shell = True)
         speech_to_text.wait()
 
         c_w_d = os.path.join(os.getcwd(),"Images")
@@ -529,7 +543,7 @@ class Controller:
         # file_names_without_ext = [".".join(f.split(".")[:-1]) for f in dir_list]
         file_names_without_ext = {".".join(f.split(".")[:-1]) : ".".join(f.split(".")[1:]) for f in dir_list}
         # print(file_names_without_ext)
-        with open("temp_output.txt", 'r') as f:
+        with open("temp_speechtotxt_output.txt", 'r') as f:
             speech = f.read()
             # return [line.strip() for line in speech]
         for line in speech.split('\n'):
@@ -558,7 +572,7 @@ class Controller:
     
     def textgcode_preview(self):
         if self.interface_ui.radioButton_voice.isChecked(): # Boolean whether checked or not
-            with open("temp_output.txt", 'r') as f:
+            with open("temp_speechtotxt_output.txt", 'r') as f:
                 user_text = f.read()
                 
         elif self.interface_ui.radioButton_text.isChecked():
@@ -566,15 +580,15 @@ class Controller:
         print(user_text)
         
         gcode_out = self.text2gcode_singlestroke(user_text)
-        self.save_gcodefile("preview.gcode", gcode_out)
-        self.gcode2img("preview.gcode")
-        os.remove(".\preview.gcode")
+        self.save_gcodefile("temp_text2gcode_preview.gcode", gcode_out)
+        self.gcode2img("temp_text2gcode_preview.gcode")
+        os.remove("temp_text2gcode_preview.gcode")
     
     def textgcode_generate(self):
         user_text = self.interface_ui.lineEdit_2.toPlainText()
         gcode_out = self.text2gcode_singlestroke(user_text)
         gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
-        # self.gcode2img("preview.gcode")
+        # self.gcode2img("temp_text2gcode_preview.gcode")
         self.save_gcodefile(gcode_file, gcode_out)
         self.gcode2img(f"{gcode_file}")
 
@@ -628,12 +642,14 @@ class Controller:
                 split_char = 290//font_size_spin
                 split = line[0:split_char].rfind(" ")
                 str1 = line[0:split]
-                str2 = line[split:]
+                str2 = line[split+1:]
                 text_parse.pop(i)
-                text_parse.insert(i, str2)
+                text_parse.insert(i, f" {str2}")
                 text_parse.insert(i, str1)
+            else:
+                text_parse[i] = f" {line}"
         text_input = "\n".join(text_parse)
-        gcode_out = text2gcode_helper.convert(text_input, fontfile=font_selected, YLineOffset=line_space_spin, XScale=font_size_spin*0.1, YScale=font_size_spin*0.1, CSpaceP=char_space, WSpaceP=word_space, Angle=angle, Feed=moviment_speed)
+        gcode_out = helper_text2gcode.convert(text_input, fontfile=font_selected, YLineOffset=line_space_spin, XScale=font_size_spin*0.1, YScale=font_size_spin*0.1, CSpaceP=char_space, WSpaceP=word_space, Angle=angle, Feed=moviment_speed)
         return gcode_out
 
     def type2text(self):
@@ -643,9 +659,9 @@ class Controller:
     def text2png(self, text_input):
         moviment_speed = self.interface_ui.vel_displacement.value()
 
-        # whitebg.png image opened using open
+        # temp_whitebg.png image opened using open
         # function and assigned to variable named img
-        img = Image.open('whitebg.png')
+        img = Image.open('temp_whitebg.png')
         
         # Image is converted into editable form using
         # Draw function and assigned to d1
@@ -663,26 +679,26 @@ class Controller:
         
         # show and save the image
         # img.show()
-        img.save("results.png")
+        img.save("temp_imgtogcode_results.png")
         
-        image = cv2.imread("results.png")
+        image = cv2.imread("temp_imgtogcode_results.png")
         self.setPhoto(image)
 
     def textpng2gcode(self):
         # h = str(round(self.height_px*0.2645833333, 2))
         h = str(round(770*0.2645833333, 2))
         
-        os.system ("magick convert results.png results.pgm")
+        os.system ("magick convert temp_imgtogcode_results.png temp_imgtogcode_results.pgm")
         
-        cmd = print("potrace results.pgm -s -H "+h+"pt -o results.svg")
-        os.system("potrace results.pgm -s -H "+h+"pt -o results.svg")
+        cmd = print("potrace temp_imgtogcode_results.pgm -s -H "+h+"pt -o temp_imgtogcode_results.svg")
+        os.system("potrace temp_imgtogcode_results.pgm -s -H "+h+"pt -o temp_imgtogcode_results.svg")
         
         moviment_speed = self.interface_ui.vel_displacement.value()
         # cutting_speed = self.interface_ui.vel_laser.value()
         
         # gcode_compiler = Compiler(CustomInterface, moviment_speed, pass_depth=5)
         gcode_compiler = Compiler(CustomInterface, movement_speed = moviment_speed, cutting_speed = 50, pass_depth=5)
-        curves = parse_file('results.svg')
+        curves = parse_file('temp_imgtogcode_results.svg')
         gcode_compiler.append_curves(curves) 
         gcode_file = QFileDialog.getSaveFileName(filter="gcode(*.gcode)")[0]
         gcode_compiler.compile_to_file(gcode_file)
@@ -731,18 +747,65 @@ class Controller:
         except:
             print("Error occurred while sending speed_input")
 
+    def send_serially(self,cmd):
+        baudrate = 115200
+        port = 'COM3'
+
+        # Connectting serial port.
+        print()
+        print(f"Trying to connect to port {port}.")
+        try:
+            s = serial.Serial(port, baudrate)
+            print(f"Port {port} has been successfully connected.")
+        except:
+            print(f"Cannot connect to port: {port}. Please check it.")
+            print(f"The port is highly beening occupied by another progrom or the baud rate is wrong.")
+            sys.exit()
+        
+        s.write(b"\r\n\r\n") # Wake up microcontroller
+        time.sleep(1)
+        s.reset_input_buffer()
+        time.sleep(2)
+        s.reset_input_buffer()
+        s.write((cmd + '\n').encode()) # Send g-code block to grbl
+        time.sleep(0.5)
+        while s.inWaiting():
+            out_temp = s.readline().strip() # Wait for grbl response
+            if out_temp.find(b'ok') >= 0:
+                print("    MSG: \"", out_temp, "\"") # Debug response
+            else:
+                print("error sending gcode\n")
+        s.close() 
+        
+
+    def pen_up(self):
+        pen_up_cmd = "M03 S40"
+        self.send_serially(pen_up_cmd)
+    
+    def pen_down(self):
+        pen_down_cmd = "M05 S10"
+        self.send_serially(pen_down_cmd)
+    
+    def laser_on(self):
+        laser_on_cmd = "M09"
+        self.send_serially(laser_on_cmd)
+    
+    def laser_off(self):
+        laser_off_cmd = "M08"
+        self.send_serially(laser_off_cmd)
+
     # # def print_screen_pressed(self): #
     # def print_screen_pressed(self, e): #
-    #     p = subprocess.Popen(["python","Snipping.py"]) ##-->addition
+    #     p = subprocess.Popen(["python","helper_snipping.py"]) ##-->addition
     #     p.wait()
-    #     im = cv2.imread('ScreenCapture.png')
+    #     im = cv2.imread('temp_screencapt_img.png')
     #     self.setPhoto(im)
 
 
 
 # def initiate_capture_to_gcode():
 #     global controller
-#     im = cv2.imread('ScreenCapture.png')
+#     im = cv2.imread('temp_screencapt_img.png')
 #     controller.setPhoto(im)
 #     # Controller.setPhoto(im)
 
@@ -754,7 +817,7 @@ class Controller:
 #     first_time = False
 
 def print_screen_pressed(e):#
-    subprocess.Popen(["python","Snipping.py"])##-->addition
+    subprocess.Popen(["python","helper_snipping.py"])##-->addition
 
 if __name__ == '__main__':
     # global controller
