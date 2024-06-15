@@ -19,9 +19,9 @@ ImageMagick (https://imagemagick.org/index.php)
 Original library: https://pypi.org/project/svg-to-gcode/#history
 svg-to-gcode library is edited, hence take the zip file from this folder
 Changes marked as [#$# My Change #$#]:
-    -> svg_to_gcode/compiler/interfaces/_abstarct_interface.py => def linear_move_g0()
-    -> svg_to_gcode/compiler/interfaces/_gcode.py => 'G1'->'G01', linear_move_g0()
-    -> svg_to_gcode/compiler/_compiler.py => linear_move -> linear_move_g0()
+    * svg_to_gcode/compiler/interfaces/_abstarct_interface.py => def linear_move_g0()
+    * svg_to_gcode/compiler/interfaces/_gcode.py => 'G1'->'G01', linear_move_g0()
+    * svg_to_gcode/compiler/_compiler.py => linear_move -> linear_move_g0()
 
 ### Text2Gcode
 Reference: https://github.com/fzellini/text2laser/tree/main
