@@ -1,4 +1,4 @@
-# software-corte-e-gravacao-laser
+# Custom Python Software for GCODE generator, visualiser and sender
 * Run: principal.py
 * interface.py, interface.ui, ui_functions.py, file_rc.py, file.qrc are necessary
 * Helper functions python scripts: "helper_xxx.py" for several functionalities
